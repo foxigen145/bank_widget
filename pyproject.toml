@@ -35,3 +35,7 @@ disallow_untyped_defs = true
 warn_return_any = true
 exclude = "venv|\\.venv|\\.mypy_cache"
 mypy_path = "src"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]

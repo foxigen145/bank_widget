@@ -14,7 +14,9 @@ def _split_name_and_number(info: str) -> Tuple[str, str]:
     """
     parts = info.strip().split()
     if len(parts) < 2:
-        raise ValueError("Ожидается строка вида '<Имя> <Номер>' (например, 'Visa Classic 1234...' или 'Счет 1234...').")
+        raise ValueError(
+            "Ожидается строка вида '<Имя> <Номер>' (например, 'Visa Classic 1234...' или 'Счет 1234...')."
+        )
     name = " ".join(parts[:-1])
     number = parts[-1]
     return name, number
