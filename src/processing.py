@@ -21,7 +21,7 @@ def sort_by_date(items: List[Dict[str, Any]], descending: bool = True) -> List[D
         try:
             return datetime.fromisoformat(d)
         except Exception:
-            # если дата отсутствует или некорректна, ставим минимальную дату
+            # если дата отсутствует или некорректная то ставим минимальную дату
             return datetime.min
 
     return sorted(items, key=_parse_date, reverse=descending)
