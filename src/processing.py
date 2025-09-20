@@ -34,7 +34,7 @@ def sort_by_date(
             try:
                 return datetime.fromisoformat(date_value)
             except ValueError:
-                # Если дата некорректна, считаем минимальной
+                # Если дата некорректная, считаем минимальной
                 return datetime.min
         # Если дата отсутствует, возвращаем минимальную дату
         return datetime.min
