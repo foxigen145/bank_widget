@@ -2,26 +2,41 @@ from typing import List, Dict, Any
 from datetime import datetime
 
 
-def filter_by_state(items: List[Dict[str, Any]], state: str = "EXECUTED") -> List[Dict[str, Any]]:
+def filter_by_state(
+    operations: List[Dict[str, Any]], state: str = "EXECUTED"
+) -> List[Dict[str, Any]]:
     """
-    Возвращает новый список словарей из `items`, у которых ключ 'state' равен заданному `state`.
-    Параметр state по умолчанию = "EXECUTED".
+    Возвращает список операций с заданным статусом.
+
+    :param operations: список словарей операций
+    :param state: значение статуса (по умолчанию "EXECUTED")
+    :return: новый список словарей, где 'state' равен переданному значению
     """
-    return [item for item in items if item.get("state") == state]
+    filtered_operations: List[Dict[str, Any]] = [
+        operation for operation in operations if operation.get("state") == state
+    ]
+    return filtered_operations
 
 
-def sort_by_date(items: List[Dict[str, Any]], descending: bool = True) -> List[Dict[str, Any]]:
+def sort_by_date(
+    operations: List[Dict[str, Any]], descending: bool = True
+) -> List[Dict[str, Any]]:
     """
-    Возвращает новый список, отсортированный по ключу 'date'.
-    Параметр `descending=True` (по умолчанию) — сортировка по убыванию (сначала новые даты).
-    Дата ожидается в ISO формате: "YYYY-MM-DDTHH:MM:SS[.micro]".
-    """
-    def _parse_date(item: Dict[str, Any]) -> datetime:
-        d = item.get("date")
-        try:
-            return datetime.fromisoformat(d)
-        except Exception:
-            # если дата отсутствует или некорректная то ставим минимальную дату
-            return datetime.min
+    Возвращает список операций, отсортированный по дате.
 
-    return sorted(items, key=_parse_date, reverse=descending)
+    :param operations: список словарей операций
+    :param descending: True — по убыванию (новые даты первыми), False — по возрастанию
+    :return: новый список словарей, отсортированный по дате
+    """
+    def parse_date(operation: Dict[str, Any]) -> datetime:
+        date_value = operation.get("date")
+        if isinstance(date_value, str):
+            try:
+                return datetime.fromisoformat(date_value)
+            except ValueError:
+                # Если дата некорректна, считаем минимальной
+                return datetime.min
+        # Если дата отсутствует, возвращаем минимальную дату
+        return datetime.min
+
+    return sorted(operations, key=parse_date, reverse=descending)

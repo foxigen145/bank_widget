@@ -1,33 +1,31 @@
+import pytest
+
 from src.processing import filter_by_state, sort_by_date
 
-
-SAMPLE = [
-    {"id": 41428829, "state": "EXECUTED", "date": "2019-07-03T18:35:29.512364"},
-    {"id": 939719570, "state": "EXECUTED", "date": "2018-06-30T02:08:58.425572"},
-    {"id": 594226727, "state": "CANCELED", "date": "2018-09-12T21:27:25.241689"},
-    {"id": 615064591, "state": "CANCELED", "date": "2018-10-14T08:21:33.419441"},
+operations_sample = [
+    {"id": 1, "state": "EXECUTED", "date": "2024-08-10T10:30:00"},
+    {"id": 2, "state": "CANCELED", "date": "2024-09-15T12:15:00"},
+    {"id": 3, "state": "EXECUTED", "date": "2024-07-05T09:00:00"},
+    {"id": 4, "state": "PENDING", "date": "2024-08-20T14:00:00"},
 ]
 
+def test_filter_by_state_default():
+    filtered = filter_by_state(operations_sample)
+    assert all(op["state"] == "EXECUTED" for op in filtered)
+    assert len(filtered) == 2
 
-def test_filter_by_state_default() -> None:
-    out = filter_by_state(SAMPLE)
-    assert all(item["state"] == "EXECUTED" for item in out)
-    assert len(out) == 2
+def test_filter_by_state_custom():
+    filtered = filter_by_state(operations_sample, state="CANCELED")
+    assert len(filtered) == 1
+    assert filtered[0]["id"] == 2
 
+def test_sort_by_date_descending():
+    sorted_ops = sort_by_date(operations_sample)
+    dates = [op["date"] for op in sorted_ops if "date" in op]
+    assert dates == sorted(dates, reverse=True)
 
-def test_filter_by_state_custom() -> None:
-    out = filter_by_state(SAMPLE, "CANCELED")
-    assert len(out) == 2
-    assert all(item["state"] == "CANCELED" for item in out)
+def test_sort_by_date_ascending():
+    sorted_ops = sort_by_date(operations_sample, descending=False)
+    dates = [op["date"] for op in sorted_ops if "date" in op]
+    assert dates == sorted(dates)
 
-
-def test_sort_by_date_default_desc() -> None:
-    out = sort_by_date(SAMPLE)
-    # Первая запись должна быть самой новой (2019)
-    assert out[0]["id"] == 41428829
-
-
-def test_sort_by_date_asc() -> None:
-    out = sort_by_date(SAMPLE, descending=False)
-    # Первая запись должна быть самой старой (2018-06-30)
-    assert out[0]["id"] == 939719570
