@@ -1,5 +1,6 @@
 
-from src.processing import filter_by_state, sort_by_date
+from src.processing import filter_by_state
+from src.processing import sort_by_date
 
 operations_sample = [
     {"id": 1, "state": "EXECUTED", "date": "2024-08-10T10:30:00"},
