@@ -40,4 +40,6 @@ def card_number_generator(start: int, stop: int) -> Iterator[str]:
     :return: итератор с номерами карт
     """
     for number in range(start, stop + 1):
-        yield f"{number:016}".replace("", " ")[1:-1]
+        s = f"{number:016}"  # число длиной 16 цифр с ведущими нулями
+        formatted = " ".join(s[i:i+4] for i in range(0, 16, 4))
+        yield formatted
