@@ -1,14 +1,124 @@
-﻿# bank-widget# Bank Widget — processing
+﻿﻿# Bank Widget — обработка банковских операций
 
-Добавлены утилиты для обработки операций:
-- `filter_by_state(items, state='EXECUTED')` — фильтрует по полю state.
-- `sort_by_date(items, descending=True)` — сортирует по полю date (ISO format).
+Проект предназначен для обработки данных о банковских операциях.  
+Реализованы функции для фильтрации и сортировки списка операций по заданным параметрам.
 
-Примеры:
-```py
-from src.processing import filter_by_state, sort_by_date
+---
 
-data = [...]
-executed = filter_by_state(data)
-sorted_desc = sort_by_date(data)
-Учебный проект: маскировка номеров карты и счёта.
+## Установка и использование
+
+### 1. Клонирование репозитория
+```bash
+git clone https://github.com/<ВАШ_НИК_НА_GITHUB>/<ИМЯ_РЕПОЗИТОРИЯ>.git
+cd <ИМЯ_РЕПОЗИТОРИЯ>
+```
+
+### 2. Создание виртуального окружения (рекомендуется)
+```bash
+python -m venv venv
+```
+
+**Активация окружения:**
+
+- **Windows:**
+  ```bash
+  venv\Scripts\activate
+  ```
+- **Linux / Mac:**
+  ```bash
+  source venv/bin/activate
+  ```
+
+### 3. Установка зависимостей
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Примеры использования
+
+### Фильтрация операций по статусу
+```python
+from processing import filter_by_state
+
+transactions = [
+    {"id": 1, "state": "EXECUTED", "amount": 100},
+    {"id": 2, "state": "CANCELED", "amount": 200},
+    {"id": 3, "state": "EXECUTED", "amount": 300},
+]
+
+result = filter_by_state(transactions)
+print(result)
+# [{'id': 1, 'state': 'EXECUTED', 'amount': 100}, {'id': 3, 'state': 'EXECUTED', 'amount': 300}]
+```
+
+---
+## Модуль generators
+
+### Функции
+
+**filter_by_currency(transactions, currency_code)**  
+Возвращает итератор с транзакциями, где код валюты совпадает с `currency_code`.
+
+**transaction_descriptions(transactions)**  
+Возвращает итератор, выдающий описания операций.
+
+**card_number_generator(start, stop)**  
+Генерирует номера карт в формате `XXXX XXXX XXXX XXXX`.
+
+### Пример использования
+```python
+from generators.generators import filter_by_currency, transaction_descriptions, card_number_generator
+
+usd_tx = filter_by_currency(transactions, "USD")
+for tx in usd_tx:
+    print(tx)
+
+descriptions = transaction_descriptions(transactions)
+for desc in descriptions:
+    print(desc)
+
+for card in card_number_generator(1, 3):
+    print(card)
+```
+---    
+## Тестирование
+
+В проекте написаны тесты ко всем функциям.  
+
+- Модули тестируются в отдельных тестовых файлах в папке `tests`.
+- Используются **фикстуры** для генерации данных для тестов.
+- Применяется **параметризация** для проверки различных кейсов работы функций.
+- Покрытие функционального кода тестами составляет более **80%**.
+
+### Запуск тестов
+Для запуска тестов используйте команду:
+
+```bash
+pytest -v
+
+### Сортировка операций по дате
+```python
+from processing import sort_by_date
+
+transactions = [
+    {"id": 1, "date": "2024-08-10T10:30:00", "amount": 150},
+    {"id": 2, "date": "2024-09-15T12:15:00", "amount": 200},
+    {"id": 3, "date": "2024-07-05T08:00:00", "amount": 100},
+]
+
+sorted_transactions = sort_by_date(transactions)
+print(sorted_transactions)
+# [{'id': 2, 'date': '2024-09-15T12:15:00', 'amount': 200},
+#  {'id': 1, 'date': '2024-08-10T10:30:00', 'amount': 150},
+#  {'id': 3, 'date': '2024-07-05T08:00:00', 'amount': 100}]
+```
+## Документация и ссылки
+
+- [Документация по Python](https://docs.python.org/3/)
+- [Репозиторий проекта на GitHub](https://github.com/ВАШ_НИК_НА_GITHUB/ИМЯ_РЕПОЗИТОРИЯ)
+
+## Лицензия
+
+Этот проект распространяется под лицензией MIT
