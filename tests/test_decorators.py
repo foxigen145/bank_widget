@@ -1,5 +1,7 @@
 import pytest
+
 from decorators import log
+
 
 @log()
 def add(x, y):
